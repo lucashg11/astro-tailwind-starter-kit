@@ -1,0 +1,74 @@
+---
+/**
+ * Botón polimórfico: se renderiza como <a> si recibe `href`,
+ * en caso contrario como <button>. Sin duplicar variantes.
+ */
+import { Icon } from 'astro-icon/components';
+
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
+
+export interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: Variant;
+  size?: Size;
+  /** Icono de Phosphor a la izquierda, p. ej. "ph:arrow-right". */
+  icon?: string;
+  /** Coloca el icono a la derecha del texto. */
+  iconRight?: boolean;
+  block?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconRight = false,
+  block = false,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-btn font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+
+const variants: Record<Variant, string> = {
+  primary: 'bg-brand-600 text-white hover:bg-brand-700',
+  secondary: 'bg-ink-100 text-ink-900 hover:bg-ink-200',
+  outline: 'border border-ink-300 text-ink-800 hover:bg-ink-50',
+  ghost: 'text-brand-700 hover:bg-brand-50',
+};
+
+// Ningún tamaño baja de 44px de alto (2.75rem): es el objetivo táctil
+// recomendado en móvil. `sm` era h-9 (36px), que cumple WCAG AA pero resulta
+// incómodo en el CTA de un header, que suele ser el botón más usado del sitio.
+const sizes: Record<Size, string> = {
+  sm: 'h-11 px-4 text-sm',
+  md: 'h-12 px-5 text-base',
+  lg: 'h-14 px-7 text-lg',
+};
+
+const classes = [
+  base,
+  variants[variant],
+  sizes[size],
+  block ? 'w-full' : '',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const Tag = href ? 'a' : 'button';
+const tagProps = href ? { href } : { type };
+---
+
+<Tag class={classes} {...tagProps} {...rest}>
+  {icon && !iconRight && <Icon name={icon} class="size-5" />}
+  <slot />
+  {icon && iconRight && <Icon name={icon} class="size-5" />}
+</Tag>

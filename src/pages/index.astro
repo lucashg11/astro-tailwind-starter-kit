@@ -1,0 +1,95 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/sections/Hero.astro';
+import Section from '@components/sections/Section.astro';
+import Card from '@components/ui/Card.astro';
+import Form from '@components/forms/Form.astro';
+
+// Imagen local optimizada a WebP en build (astro:assets).
+import heroImage from '@assets/images/hero.png';
+
+const features = [
+  {
+    icon: 'ph:palette',
+    title: 'Tokens de diseño',
+    description:
+      'Colores, tipografías, spacing y radios centralizados con Tailwind v4 (@theme).',
+  },
+  {
+    icon: 'ph:magnifying-glass',
+    title: 'SEO listo',
+    description:
+      'Metadatos, Open Graph, Twitter Cards, sitemap y robots.txt configurados.',
+  },
+  {
+    icon: 'ph:image',
+    title: 'Imágenes WebP',
+    description:
+      'Pipeline con astro:assets: responsive, lazy-loading y conversión automática.',
+  },
+  {
+    icon: 'ph:puzzle-piece',
+    title: 'Componentes base',
+    description:
+      'Header, Footer, Hero, Section, Card, Button y Form reutilizables.',
+  },
+  {
+    icon: 'ph:sparkle',
+    title: 'Iconos Iconify',
+    description: 'Set Phosphor vía astro-icon. Cero SVG a mano y tree-shaking.',
+  },
+  {
+    icon: 'ph:rocket-launch',
+    title: 'Migración rápida',
+    description:
+      'Estructura clara pensada para portar HTML/CSS/JS vanilla sin fricción.',
+  },
+];
+---
+
+<BaseLayout
+  title="Inicio"
+  description="Template base para migrar sitios estáticos a Astro + Tailwind."
+>
+  <Hero
+    eyebrow="Starter Kit"
+    title="Migra tus sitios estáticos a Astro + Tailwind"
+    subtitle="Una base con tokens de diseño, SEO, pipeline de imágenes y componentes reutilizables. Empieza a construir en minutos."
+    primaryCta={{ label: 'Empezar ahora', href: '#contact', icon: 'ph:arrow-right' }}
+    secondaryCta={{ label: 'Ver características', href: '#features', icon: 'ph:list' }}
+    image={heroImage}
+    imageAlt="Vista previa del starter kit"
+  />
+
+  <Section
+    id="features"
+    eyebrow="Características"
+    title="Todo lo que necesitas para empezar"
+    intro="Componentes declarativos y expresivos, sin duplicación, listos para producción."
+    align="center"
+    tone="muted"
+  >
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        features.map((feature) => (
+          <Card
+            icon={feature.icon}
+            title={feature.title}
+            description={feature.description}
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section
+    id="contact"
+    eyebrow="Contacto"
+    title="Hablemos"
+    intro="¿Listo para migrar tu sitio? Escríbenos."
+    align="center"
+    width="narrow"
+  >
+    <Form action="#" />
+  </Section>
+</BaseLayout>

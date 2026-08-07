@@ -1,0 +1,100 @@
+---
+/**
+ * Cabecera con navegación responsiva. El menú móvil se controla
+ * con un pequeño script inline (sin dependencias JS externas).
+ */
+import { Icon } from 'astro-icon/components';
+import { site, mainNav } from '@config/site';
+import Button from '@components/ui/Button.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href.split('#')[0]);
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-ink-200 bg-white/80 backdrop-blur"
+>
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2 font-heading text-lg font-bold">
+      <Icon name="ph:cube-bold" class="size-7 text-brand-600" />
+      <span>{site.name}</span>
+    </a>
+
+    <nav aria-label="Principal" class="hidden items-center gap-1 md:flex">
+      {
+        mainNav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class:list={[
+              'rounded-btn px-3 py-2 text-sm font-medium transition-colors',
+              isActive(item.href)
+                ? 'text-brand-700'
+                : 'text-ink-600 hover:text-ink-900',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden md:block">
+      <Button href="/#contact" size="sm">Empezar</Button>
+    </div>
+
+    <button
+      type="button"
+      id="menu-toggle"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      class="inline-flex size-10 items-center justify-center rounded-btn text-ink-700 hover:bg-ink-100 md:hidden"
+    >
+      <Icon name="ph:list-bold" class="size-6" data-icon-open />
+      <Icon name="ph:x-bold" class="hidden size-6" data-icon-close />
+    </button>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    aria-label="Menú móvil"
+    hidden
+    class="border-t border-ink-200 bg-white md:hidden"
+  >
+    <ul class="container-page flex flex-col gap-1 py-4">
+      {
+        mainNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="block rounded-btn px-3 py-2 text-base font-medium text-ink-700 hover:bg-ink-100"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const openIcon = toggle?.querySelector('[data-icon-open]');
+  const closeIcon = toggle?.querySelector('[data-icon-close]');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = menu?.hasAttribute('hidden');
+    if (isOpen) {
+      menu?.removeAttribute('hidden');
+    } else {
+      menu?.setAttribute('hidden', '');
+    }
+    toggle.setAttribute('aria-expanded', String(!!isOpen));
+    openIcon?.classList.toggle('hidden', !!isOpen);
+    closeIcon?.classList.toggle('hidden', !isOpen);
+  });
+</script>

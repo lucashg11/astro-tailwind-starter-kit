@@ -1,0 +1,64 @@
+---
+/**
+ * SEO centralizado: <title>, meta description, canonical,
+ * Open Graph, Twitter Cards y JSON-LD básico.
+ * Se usa dentro de <head> desde BaseLayout.
+ */
+import { site } from '@config/site';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  /** Ruta o URL absoluta de la imagen social. */
+  image?: string;
+  /** 'website' | 'article' | ... */
+  type?: string;
+  /** Evita indexación de esta página. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  image = site.defaultOgImage,
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = title ? site.titleTemplate.replace('%s', title) : site.title;
+
+// URL canónica basada en `site` de astro.config + ruta actual.
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const ogImage = new URL(image, Astro.site ?? site.url).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  url: site.url,
+  description: site.description,
+};
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content={site.locale} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+{site.twitter && <meta name="twitter:site" content={`@${site.twitter}`} />}
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

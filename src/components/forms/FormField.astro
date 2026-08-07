@@ -1,0 +1,71 @@
+---
+/**
+ * Campo de formulario accesible: label + control + ayuda/errores.
+ * Renderiza <textarea> si type="textarea", si no un <input>.
+ * Reutilizable en cualquier formulario para no duplicar markup.
+ */
+export interface Props {
+  name: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  autocomplete?: string;
+  rows?: number;
+  hint?: string;
+}
+
+const {
+  name,
+  label,
+  type = 'text',
+  placeholder,
+  required = false,
+  autocomplete,
+  rows = 4,
+  hint,
+} = Astro.props;
+
+const id = `field-${name}`;
+const isTextarea = type === 'textarea';
+
+// `type` se tipa como string para poder aceptar "textarea", pero el atributo
+// del <input> solo admite la unión HTMLInputTypeAttribute. En la rama del input
+// ya sabemos que no es textarea, así que el cast es seguro.
+const inputType = type as 'text';
+
+const controlClass =
+  'w-full rounded-btn border border-ink-300 bg-white px-3.5 py-2.5 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200';
+---
+
+<div class="flex flex-col gap-1.5">
+  <label for={id} class="text-sm font-medium text-ink-800">
+    {label}
+    {required && <span class="text-danger">*</span>}
+  </label>
+
+  {
+    isTextarea ? (
+      <textarea
+        id={id}
+        name={name}
+        rows={rows}
+        placeholder={placeholder}
+        required={required}
+        class={controlClass}
+      />
+    ) : (
+      <input
+        id={id}
+        name={name}
+        type={inputType}
+        placeholder={placeholder}
+        required={required}
+        autocomplete={autocomplete}
+        class={controlClass}
+      />
+    )
+  }
+
+  {hint && <p class="text-xs text-ink-500">{hint}</p>}
+</div>

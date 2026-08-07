@@ -1,0 +1,59 @@
+---
+/**
+ * Pie de página con marca, navegación secundaria y redes sociales.
+ * Todo se alimenta desde @config/site.
+ */
+import { Icon } from 'astro-icon/components';
+import { site, footerNav, socials } from '@config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-ink-200 bg-ink-50">
+  <div
+    class="container-page flex flex-col gap-6 py-12 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div class="flex items-center gap-2 font-heading font-bold">
+      <Icon name="ph:cube-bold" class="size-6 text-brand-600" />
+      <span>{site.name}</span>
+    </div>
+
+    <nav aria-label="Enlaces del pie">
+      <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-600">
+        {
+          footerNav.map((item) => (
+            <li>
+              <a href={item.href} class="hover:text-ink-900">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <ul class="flex gap-2">
+      {
+        socials.map((social) => (
+          <li>
+            <a
+              href={social.href}
+              aria-label={social.label}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="inline-flex size-9 items-center justify-center rounded-btn text-ink-500 hover:bg-white hover:text-brand-600"
+            >
+              <Icon name={social.icon} class="size-5" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="border-t border-ink-200 py-6">
+    <p class="container-page text-center text-sm text-ink-500">
+      © {year} {site.name}. Todos los derechos reservados.
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sustituye el dominio por el real (debe coincidir con `site` en astro.config.mjs)
+Sitemap: https://www.example.com/sitemap-index.xml

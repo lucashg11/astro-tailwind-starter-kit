@@ -1,0 +1,70 @@
+---
+/**
+ * Bloque de sección reutilizable: aplica espaciado vertical,
+ * contenedor y una cabecera opcional (eyebrow + título + intro).
+ * Es la pieza para reconstruir cualquier sección del sitio migrado.
+ */
+export interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  /** Alineación de la cabecera. */
+  align?: 'left' | 'center';
+  /** Fondo de la sección. */
+  tone?: 'default' | 'muted' | 'brand';
+  /** Ancho del contenedor. */
+  width?: 'default' | 'narrow' | 'wide';
+  class?: string;
+}
+
+const {
+  id,
+  eyebrow,
+  title,
+  intro,
+  align = 'left',
+  tone = 'default',
+  width = 'default',
+  class: className = '',
+} = Astro.props;
+
+const tones = {
+  default: 'bg-white text-ink-800',
+  muted: 'bg-ink-50 text-ink-800',
+  brand: 'bg-brand-950 text-ink-100',
+};
+
+const widths = {
+  narrow: 'max-w-3xl',
+  default: 'max-w-7xl',
+  wide: 'max-w-screen-2xl',
+};
+
+const hasHeader = Boolean(eyebrow || title || intro);
+---
+
+<section id={id} class:list={['py-section', tones[tone], className]}>
+  <div class:list={['mx-auto w-full px-6 lg:px-8', widths[width]]}>
+    {
+      hasHeader && (
+        <header
+          class:list={[
+            'mb-12 flex flex-col gap-3',
+            align === 'center' && 'items-center text-center',
+            align === 'center' && 'mx-auto max-w-2xl',
+          ]}
+        >
+          {eyebrow && (
+            <span class="text-sm font-semibold uppercase tracking-wider text-brand-600">
+              {eyebrow}
+            </span>
+          )}
+          {title && <h2 class="text-3xl sm:text-4xl">{title}</h2>}
+          {intro && <p class="text-lg text-ink-600">{intro}</p>}
+        </header>
+      )
+    }
+    <slot />
+  </div>
+</section>

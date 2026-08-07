@@ -1,0 +1,34 @@
+{
+  "name": "astro-tailwind-starter-kit",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Template base para migrar sitios estáticos (HTML/CSS/JS vanilla) a Astro + Tailwind con tokens de diseño, SEO y componentes reutilizables.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@iconify-json/ph": "^1.2.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.1.4",
+    "astro": "^5.6.1",
+    "astro-icon": "^1.1.5",
+    "sharp": "^0.34.1",
+    "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.3"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "esbuild@0.27.7": true,
+    "sharp@0.34.5": true
+  }
+}

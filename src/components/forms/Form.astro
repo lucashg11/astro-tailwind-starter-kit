@@ -1,0 +1,75 @@
+---
+/**
+ * Formulario de contacto reutilizable.
+ * `action` y `method` son configurables para conectarlo a cualquier
+ * backend (Formspree, Netlify Forms, endpoint propio, etc.).
+ * Incluye honeypot antispam y campos vía FormField.
+ */
+import FormField from '@components/forms/FormField.astro';
+import Button from '@components/ui/Button.astro';
+
+export interface Props {
+  action?: string;
+  method?: 'post' | 'get';
+  submitLabel?: string;
+}
+
+const {
+  action = '#',
+  method = 'post',
+  submitLabel = 'Enviar mensaje',
+} = Astro.props;
+---
+
+<form
+  action={action}
+  method={method}
+  class="flex flex-col gap-5 rounded-card border border-ink-200 bg-white p-6 shadow-card sm:p-8"
+>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <FormField
+      name="name"
+      label="Nombre"
+      placeholder="Tu nombre"
+      autocomplete="name"
+      required
+    />
+    <FormField
+      name="email"
+      label="Email"
+      type="email"
+      placeholder="tu@email.com"
+      autocomplete="email"
+      required
+    />
+  </div>
+
+  <FormField
+    name="subject"
+    label="Asunto"
+    placeholder="¿En qué podemos ayudarte?"
+  />
+
+  <FormField
+    name="message"
+    label="Mensaje"
+    type="textarea"
+    placeholder="Cuéntanos más..."
+    required
+  />
+
+  {/* Honeypot antispam: oculto para humanos, tentador para bots. */}
+  <div class="hidden" aria-hidden="true">
+    <label>
+      No rellenar
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <div class="flex items-center justify-between gap-4">
+    <p class="text-xs text-ink-500">Responderemos en menos de 24 h.</p>
+    <Button type="submit" icon="ph:paper-plane-tilt" iconRight>
+      {submitLabel}
+    </Button>
+  </div>
+</form>
